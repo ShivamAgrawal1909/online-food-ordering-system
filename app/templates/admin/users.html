@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+{% block title %}Users{% endblock %}
+{% block header %}User Management{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for u in users.items %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.name }}</td>
+                        <td>{{ u.email }}</td>
+                        <td><span class="badge bg-{{ 'danger' if u.role=='admin' else 'secondary' }}">{{ u.role }}</span></td>
+                        <td>{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_user', id=u.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            {% if u.id != current_user.id %}
+                            <form action="{{ url_for('admin.delete_user', id=u.id) }}" method="post" class="d-inline" onsubmit="return confirm('Delete this user?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center text-muted">No users.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if users.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                {% for p in users.iter_pages() %}
+                {% if p %}<li class="page-item {% if p==users.page %}active{% endif %}"><a class="page-link" href="{{ url_for('admin.users', page=p) }}">{{ p }}</a></li>
+                {% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

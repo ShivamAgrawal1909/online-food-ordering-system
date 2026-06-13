@@ -1,0 +1,23 @@
+User Features
+Login/Signup: Users can create accounts or log in to existing accounts securely.
+Profile Management: Users can update their profiles and passwords as needed.
+Password Reset: Users can request a password reset email using SendGrid integration.
+Shopping Cart: Users can add/remove items from their carts and update quantities.
+Saved For Later: Users can move items to a "Saved For Later" list for future purchase consideration.
+Wishlist: Users can add/remove items to/from their wishlist for future reference.
+Product Browsing: Users can paginate through products, search for specific items, and apply filters based on categories, ratings, and price ranges.
+Shipping Information: Users can save shipping information in session storage for faster checkout.
+Order History: Users can view their order history with filters and access order details.
+Order Confirmation: Users receive email notifications with order details upon order placement.
+Product Reviews: Users can review products they have purchased.
+
+
+Admin Features
+Dashboard Access: Admins have exclusive access to the dashboard, which provides insights and management tools.
+Order Management: Admins can update order statuses and delete orders as needed.
+Product Management: Admins can add new products, update existing product information, and manage inventory.
+User Management: Admins have the authority to update user data and delete user accounts.
+Review Management: Admins can view and delete product reviews submitted by users.
+Payment Management: Admins have the authority to manage payment
+
+

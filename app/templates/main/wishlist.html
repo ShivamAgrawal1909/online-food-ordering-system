@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Wishlist - Online Food Ordering{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Wishlist</h2>
+    {% if items %}
+    <div class="row g-4">
+        {% for w in items %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <img src="{{ w.product.image_url or 'https://via.placeholder.com/400x200?text=' + w.product.name|urlencode }}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ w.product.name }}</h5>
+                    <p class="text-primary fw-bold mb-2">Rs.{{ "%.2f"|format(w.product.price) }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('main.product_detail', id=w.product.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+                        <form action="{{ url_for('main.add_to_cart', product_id=w.product.id) }}" method="post" class="d-inline">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                        </form>
+                        <a href="{{ url_for('main.remove_from_wishlist', product_id=w.product.id) }}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-heart" style="font-size: 4rem; color: #ccc;"></i>
+        <p class="mt-3 text-muted">Your wishlist is empty.</p>
+        <a href="{{ url_for('main.products') }}" class="btn btn-primary">Browse Menu</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

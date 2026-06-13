@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% block title %}Reviews{% endblock %}
+{% block header %}Review Management{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>ID</th><th>User</th><th>Product</th><th>Rating</th><th>Comment</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for r in reviews.items %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.user.name }}</td>
+                        <td>{{ r.product.name }}</td>
+                        <td>{{ r.rating }}/5</td>
+                        <td>{{ r.comment[:50] }}{% if r.comment|length > 50 %}...{% endif %}</td>
+                        <td>{{ r.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <form action="{{ url_for('admin.delete_review', id=r.id) }}" method="post" class="d-inline" onsubmit="return confirm('Delete this review?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted">No reviews.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if reviews.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                {% for p in reviews.iter_pages() %}
+                {% if p %}<li class="page-item {% if p==reviews.page %}active{% endif %}"><a class="page-link" href="{{ url_for('admin.reviews', page=p) }}">{{ p }}</a></li>
+                {% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

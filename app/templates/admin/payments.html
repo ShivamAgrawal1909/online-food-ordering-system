@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Payments{% endblock %}
+{% block header %}Payment Management{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead><tr><th>ID</th><th>Order</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for pay in payments.items %}
+                    <tr>
+                        <td>{{ pay.id }}</td>
+                        <td>#{{ pay.order_id }}</td>
+                        <td>Rs.{{ "%.2f"|format(pay.amount) }}</td>
+                        <td>{{ pay.method }}</td>
+                        <td>{{ pay.status }}</td>
+                        <td>{{ pay.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <form action="{{ url_for('admin.update_payment_status', id=pay.id) }}" method="post" class="d-inline">
+                                <select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                    <option value="pending" {% if pay.status=='pending' %}selected{% endif %}>Pending</option>
+                                    <option value="completed" {% if pay.status=='completed' %}selected{% endif %}>Completed</option>
+                                    <option value="failed" {% if pay.status=='failed' %}selected{% endif %}>Failed</option>
+                                    <option value="refunded" {% if pay.status=='refunded' %}selected{% endif %}>Refunded</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted">No payments.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if payments.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                {% for p in payments.iter_pages() %}
+                {% if p %}<li class="page-item {% if p==payments.page %}active{% endif %}"><a class="page-link" href="{{ url_for('admin.payments', page=p) }}">{{ p }}</a></li>
+                {% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

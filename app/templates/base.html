@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Online Food Ordering{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0a58ca;
+            --accent: #fd7e14;
+            --dark: #1a1d29;
+            --light-bg: #f8f9fc;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light-bg); min-height: 100vh; }
+        .navbar { box-shadow: 0 2px 15px rgba(0,0,0,.08); }
+        .navbar-brand { font-weight: 700; font-size: 1.4rem; }
+        .btn-primary { background: var(--primary); border: none; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .alert { border-radius: 8px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+        .form-control, .form-select { border-radius: 8px; }
+        footer { background: var(--dark); color: #9ca3af; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand text-primary" href="{{ url_for('main.index') }}">
+                <i class="bi bi-basket-fill me-2"></i>FoodOrder
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.products') }}">Menu</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.cart') }}">
+                        Cart <span class="badge bg-primary" id="cart-count">{{ current_user.cart_items.count() }}</span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.wishlist') }}">Wishlist</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.saved_for_later') }}">Saved</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.orders') }}">Orders</a></li>
+                    {% if current_user.is_admin %}
+                    <li class="nav-item"><a class="nav-link text-success" href="{{ url_for('admin.index') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ current_user.name }}</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}"><i class="bi bi-person"></i> Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-primary ms-2" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="container mb-3">
+            {% for cat, msg in messages %}
+            <div class="alert alert-{{ cat }}" role="alert">{{ msg }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 FoodOrder. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

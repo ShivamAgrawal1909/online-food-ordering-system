@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Menu - Online Food Ordering{% endblock %}
+{% block extra_css %}
+<style>
+    .product-card { transition: transform 0.2s, box-shadow 0.2s; height: 100%; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,.12); }
+    .product-card .card-img-top { height: 220px; object-fit: cover; background: #e2e8f0; }
+    .filter-card { position: sticky; top: 90px; }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Our Menu</h2>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card filter-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Filters</h5>
+                    <form method="get" action="{{ url_for('main.products') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" name="search" class="form-control" value="{{ request.args.get('search','') }}" placeholder="Search...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for c in categories %}
+                                <option value="{{ c }}" {% if request.args.get('category') == c %}selected{% endif %}>{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Min Price</label>
+                            <input type="number" name="min_price" class="form-control" value="{{ request.args.get('min_price','') }}" placeholder="0" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Max Price</label>
+                            <input type="number" name="max_price" class="form-control" value="{{ request.args.get('max_price','') }}" placeholder="100" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Min Rating</label>
+                            <select name="min_rating" class="form-select">
+                                <option value="">Any</option>
+                                <option value="4" {% if request.args.get('min_rating') == '4' %}selected{% endif %}>4+ Stars</option>
+                                <option value="3" {% if request.args.get('min_rating') == '3' %}selected{% endif %}>3+ Stars</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <a href="{{ url_for('main.products') }}" class="btn btn-outline-secondary w-100 mt-2">Clear</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="row g-4">
+                {% for p in products.items %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="{{ p.image_url or 'https://via.placeholder.com/400x220?text=' + p.name|urlencode }}" class="card-img-top" alt="{{ p.name }}">
+                        <div class="card-body">
+                            <span class="badge bg-secondary mb-2">{{ p.category }}</span>
+                            <h5 class="card-title">{{ p.name }}</h5>
+                            <p class="text-muted small">{{ p.description[:70] }}{% if p.description|length > 70 %}...{% endif %}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">Rs.{{ "%.2f"|format(p.price) }}</span>
+                                {% if p.rating %}<span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> {{ "%.1f"|format(p.rating) }}</span>{% endif %}
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('main.product_detail', id=p.id) }}" class="btn btn-outline-primary btn-sm flex-grow-1">View</a>
+                                {% if current_user.is_authenticated %}
+                                <form action="{{ url_for('main.add_to_cart', product_id=p.id) }}" method="post" class="d-inline">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus"></i></button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No products found.</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% if products.pages > 1 %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% for p in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if p %}
+                    <li class="page-item {% if p == products.page %}active{% endif %}"><a class="page-link" href="{{ url_for('main.products', page=p, search=request.args.get('search',''), category=request.args.get('category',''), min_price=request.args.get('min_price',''), max_price=request.args.get('max_price',''), min_rating=request.args.get('min_rating','')) }}">{{ p }}</a></li>
+                    {% else %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

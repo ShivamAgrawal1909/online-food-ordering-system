@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Home - Online Food Ordering{% endblock %}
+{% block extra_css %}
+<style>
+    .hero {
+        background: linear-gradient(135deg, #1a1d29 0%, #2d3748 50%, #4a5568 100%);
+        color: white;
+        padding: 100px 0 80px;
+        border-radius: 0 0 40px 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+    .hero h1 { font-size: 3rem; font-weight: 800; }
+    .hero p { font-size: 1.2rem; opacity: 0.9; }
+    .btn-cta {
+        background: #fd7e14;
+        border: none;
+        padding: 14px 32px;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta:hover {
+        background: #e96b00;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(253, 126, 20, 0.4);
+    }
+    .section-title { font-weight: 700; color: #1a1d29; margin-bottom: 2rem; }
+    .product-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        overflow: hidden;
+        height: 100%;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+    .product-card .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        background: #e2e8f0;
+    }
+    .product-card .badge-rating { background: #ffc107; color: #1a1d29; }
+    .features-section { padding: 80px 0; }
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="hero position-relative">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1>Order Fresh Food <br>Delivered to Your Door</h1>
+                <p class="my-4">Discover delicious meals from our curated menu. Quick delivery, great taste, and amazing service.</p>
+                <a href="{{ url_for('main.products') }}" class="btn btn-cta btn-lg">Browse Menu</a>
+            </div>
+            <div class="col-lg-6 text-center d-none d-lg-block">
+                <i class="bi bi-basket3" style="font-size: 12rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="section-title text-center">Featured Dishes</h2>
+    <div class="row g-4">
+        {% for p in products %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card product-card">
+                <img src="{{ p.image_url or 'https://via.placeholder.com/400x200?text=' + p.name|urlencode }}" class="card-img-top" alt="{{ p.name }}">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">{{ p.category }}</span>
+                    <h5 class="card-title">{{ p.name }}</h5>
+                    <p class="text-muted small mb-2">{{ p.description[:60] }}{% if p.description|length > 60 %}...{% endif %}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">Rs.{{ "%.2f"|format(p.price) }}</span>
+                        {% if p.rating %}<span class="badge badge-rating"><i class="bi bi-star-fill"></i> {{ "%.1f"|format(p.rating) }}</span>{% endif %}
+                    </div>
+                    <a href="{{ url_for('main.product_detail', id=p.id) }}" class="btn btn-outline-primary btn-sm mt-2 w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No products yet. Run the seed script to add sample data.</p>
+            <a href="{{ url_for('main.products') }}" class="btn btn-primary">View Menu</a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('main.products') }}" class="btn btn-primary">View All Menu</a>
+    </div>
+</section>
+
+<section class="features-section bg-white">
+    <div class="container">
+        <h2 class="section-title text-center">Why Choose Us</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="feature-icon mx-auto mb-3"><i class="bi bi-truck"></i></div>
+                <h5>Fast Delivery</h5>
+                <p class="text-muted">Quick and reliable delivery to your doorstep</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="feature-icon mx-auto mb-3"><i class="bi bi-shield-check"></i></div>
+                <h5>Secure Payment</h5>
+                <p class="text-muted">Safe and secure payment options</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="feature-icon mx-auto mb-3"><i class="bi bi-heart"></i></div>
+                <h5>Fresh Quality</h5>
+                <p class="text-muted">Fresh ingredients, quality assured</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

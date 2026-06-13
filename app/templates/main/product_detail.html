@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - Online Food Ordering{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-5">
+            <img src="{{ product.image_url or 'https://via.placeholder.com/500x400?text=' + product.name|urlencode }}" class="img-fluid rounded-3 shadow" alt="{{ product.name }}">
+        </div>
+        <div class="col-lg-7">
+            <span class="badge bg-secondary">{{ product.category }}</span>
+            <h1 class="mt-2">{{ product.name }}</h1>
+            <div class="mb-3">
+                {% if product.rating %}
+                <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> {{ "%.1f"|format(product.rating) }}</span>
+                <small class="text-muted">({{ product.rating_count }} reviews)</small>
+                {% endif %}
+            </div>
+            <h3 class="text-primary mb-4">Rs.{{ "%.2f"|format(product.price) }}</h3>
+            <p class="lead">{{ product.description or 'No description.' }}</p>
+            <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="post" class="d-flex align-items-center gap-3 mb-3">
+                <div class="input-group" style="width: 120px;">
+                    <input type="number" name="quantity" value="1" min="1" max="{{ product.stock or 99 }}" class="form-control">
+                </div>
+                {% if current_user.is_authenticated %}
+                <button type="submit" class="btn btn-primary"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+                {% if in_wishlist %}
+                <a href="{{ url_for('main.remove_from_wishlist', product_id=product.id) }}" class="btn btn-outline-danger"><i class="bi bi-heart-fill"></i></a>
+                {% else %}
+                <a href="{{ url_for('main.add_to_wishlist', product_id=product.id) }}" class="btn btn-outline-danger"><i class="bi bi-heart"></i></a>
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login to Add to Cart</a>
+                {% endif %}
+            </form>
+            {% if product.stock is not none %}<small class="text-muted">In stock: {{ product.stock }}</small>{% endif %}
+        </div>
+    </div>
+
+    {% if can_review %}
+    <div class="mt-5">
+        <h4>Write a Review</h4>
+        <form action="{{ url_for('main.add_review', product_id=product.id) }}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-select" required>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Comment</label>
+                <textarea name="comment" class="form-control" rows="3" placeholder="Share your experience..."></textarea>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if reviews %}
+    <div class="mt-5">
+        <h4>Customer Reviews</h4>
+        {% for r in reviews %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ r.user.name }}</strong>
+                    <span class="badge bg-warning text-dark">{% for i in range(r.rating) %}★{% endfor %}</span>
+                </div>
+                {% if r.comment %}<p class="mb-0 mt-1">{{ r.comment }}</p>{% endif %}
+                <small class="text-muted">{{ r.created_at.strftime('%B %d, %Y') }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

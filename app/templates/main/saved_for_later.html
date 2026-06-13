@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Saved For Later - Online Food Ordering{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Saved For Later</h2>
+    {% if items %}
+    <div class="row g-4">
+        {% for s in items %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <img src="{{ s.product.image_url or 'https://via.placeholder.com/400x200?text=' + s.product.name|urlencode }}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ s.product.name }}</h5>
+                    <p class="text-primary fw-bold mb-2">Rs.{{ "%.2f"|format(s.product.price) }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('main.move_to_cart', item_id=s.id) }}" class="btn btn-primary btn-sm">Move to Cart</a>
+                        <a href="{{ url_for('main.remove_saved', item_id=s.id) }}" class="btn btn-outline-danger btn-sm">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-bookmark" style="font-size: 4rem; color: #ccc;"></i>
+        <p class="mt-3 text-muted">No saved items.</p>
+        <a href="{{ url_for('main.products') }}" class="btn btn-primary">Browse Menu</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

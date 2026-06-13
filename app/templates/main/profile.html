@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Profile - Online Food Ordering{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Profile</h2>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Update Profile</h5>
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                            {% if form.name.errors %}<small class="text-danger">{{ form.name.errors[0] }}</small>{% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control" value="{{ current_user.email }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(class="form-control", rows=2) }}
+                        </div>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="mb-3">Change Password</h5>
+                    <form method="post">
+                        {{ pwd_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ pwd_form.current_password.label(class="form-label") }}
+                            {{ pwd_form.current_password(class="form-control") }}
+                            {% if pwd_form.current_password.errors %}<small class="text-danger">{{ pwd_form.current_password.errors[0] }}</small>{% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ pwd_form.new_password.label(class="form-label") }}
+                            {{ pwd_form.new_password(class="form-control") }}
+                            {% if pwd_form.new_password.errors %}<small class="text-danger">{{ pwd_form.new_password.errors[0] }}</small>{% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ pwd_form.confirm_password.label(class="form-label") }}
+                            {{ pwd_form.confirm_password(class="form-control") }}
+                        </div>
+                        {{ pwd_form.submit(class="btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

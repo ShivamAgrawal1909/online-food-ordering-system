@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Checkout - Online Food Ordering{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Checkout</h2>
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Shipping Information</h5>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="shipping_name" class="form-control" value="{{ session.get('checkout_shipping',{}).get('name', current_user.name) }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email *</label>
+                            <input type="email" name="shipping_email" class="form-control" value="{{ session.get('checkout_shipping',{}).get('email', current_user.email) }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="shipping_phone" class="form-control" value="{{ session.get('checkout_shipping',{}).get('phone', current_user.phone or '') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address *</label>
+                            <textarea name="shipping_address" class="form-control" rows="3" required>{{ session.get('checkout_shipping',{}).get('address', current_user.address or '') }}</textarea>
+                        </div>
+                        <hr>
+                        <h6>Order Items</h6>
+                        {% for item in items %}
+                        <div class="d-flex justify-content-between py-2">
+                            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                            <span>Rs.{{ "%.2f"|format(item.product.price * item.quantity) }}</span>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <button type="submit" class="btn btn-primary w-100">Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Order Summary</h5>
+                    <hr>
+                    {% for item in items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <span>Rs.{{ "%.2f"|format(item.product.price * item.quantity) }}</span>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <p class="d-flex justify-content-between fs-5"><strong>Total</strong><strong>Rs.{{ "%.2f"|format(total) }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
