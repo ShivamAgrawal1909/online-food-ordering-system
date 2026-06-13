@@ -2,66 +2,122 @@
 
 A complete Python Flask-based food ordering web application with user and admin features.
 
-## Features
+---
 
-### User Features
-- **Login/Signup** - Secure authentication
-- **Profile Management** - Update profile and password
-- **Password Reset** - Via Gmail (requires app password)
-- **Shopping Cart** - Add, remove, update quantities
-- **Saved For Later** - Move items for future purchase
-- **Wishlist** - Save products for later
-- **Product Browsing** - Pagination, search, filters (category, rating, price)
-- **Shipping Information** - Stored in session for checkout
-- **Order History** - View with status filters
-- **Order Confirmation** - Email notification on placement
-- **Product Reviews** - Review purchased products only
+## 🔗 Live Demo
 
-### Admin Features
-- **Dashboard** - Stats, revenue, recent orders
-- **Order Management** - Update status, delete orders
-- **Product Management** - Add, edit, delete products
-- **User Management** - Edit and delete users
-- **Review Management** - View and delete reviews
-- **Payment Management** - Update payment status
+👉 [Add your live link here]
 
-## Setup
+**Admin Login:**
+- Email: `admin@foodorder.com`
+- Password: `admin123`
 
-1. **Install dependencies**
-   ```
-   pip install -r requirements.txt
-   ```
+**Demo User Login:**
+- Email: `user@example.com`
+- Password: `user123`
 
-2. **Configure environment** (optional, for email)
-   - Copy `.env.example` to `.env`
-   - For Gmail password reset:
-     - Enable 2FA on your Google account
-     - Generate an App Password: Google Account → Security → App passwords
-     - Set `MAIL_USERNAME` and `MAIL_PASSWORD` in `.env` or environment
+---
 
-3. **Seed the database**
-   ```
-   python seed.py
-   ```
-   Creates: 8 products, admin (admin@foodorder.com / admin123), user (user@example.com / user123)
+## Screenshots
 
-4. **Run the app**
-   ```
-   python run.py
-   ```
-   Open http://localhost:5000
+> Add 2-3 screenshots here of Home, Cart, and Admin Dashboard.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Framework | Flask |
+| ORM | Flask-SQLAlchemy |
+| Database | SQLite |
+| Frontend | Jinja2, Bootstrap |
+| Email | Gmail SMTP |
+| Auth | Session-based |
+
+---
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── __init__.py      # App factory
-│   ├── models.py        # Database models
-│   ├── routes/          # Blueprints (auth, main, admin)
-│   ├── templates/       # Jinja2 templates
-│   └── utils/           # Email utilities
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes/
+│   ├── templates/
+│   └── utils/
 ├── config.py
 ├── run.py
 ├── seed.py
 └── requirements.txt
 ```
+
+---
+
+## User Features
+
+- Secure Login / Signup
+- Profile & Password Management
+- Password Reset via Gmail
+- Shopping Cart — add, remove, update quantities
+- Saved For Later — move items for future purchase
+- Wishlist
+- Product Browsing — pagination, search, filters (category, rating, price)
+- Order History with status filters
+- Order Confirmation email notification
+- Product Reviews (purchased products only)
+
+---
+
+## Admin Features
+
+- Dashboard with stats and revenue
+- Order Management — update status, delete
+- Product Management — add, edit, delete
+- User Management — edit, delete
+- Review Management — view, delete
+- Payment Management — update status
+
+---
+
+## Local Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/ShivamAgrawal1909/online-food-ordering-system.git
+cd online-food-ordering-system
+
+# Create virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # macOS/Linux
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment (optional for email)
+# Copy .env.example to .env
+# Set MAIL_USERNAME and MAIL_PASSWORD for Gmail password reset
+
+# Seed demo data
+python seed.py
+
+# Run the app
+python run.py
+```
+
+Visit: http://localhost:5000
+
+---
+
+## Email Setup (Optional)
+
+For Gmail password reset:
+- Enable 2FA on your Google account
+- Generate App Password: Google Account → Security → App Passwords
+- Set `MAIL_USERNAME` and `MAIL_PASSWORD` in `.env`
+
+---
+
+## License
+This project is for educational and portfolio purposes only.
