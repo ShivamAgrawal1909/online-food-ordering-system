@@ -4,10 +4,6 @@ A complete Python Flask-based food ordering web application with user and admin 
 
 ---
 
-## 🔗 Live Demo
-
-👉 [Add your live link here]
-
 **Admin Login:**
 - Email: `admin@foodorder.com`
 - Password: `admin123`
@@ -18,11 +14,6 @@ A complete Python Flask-based food ordering web application with user and admin 
 
 ---
 
-## Screenshots
-
-> Add 2-3 screenshots here of Home, Cart, and Admin Dashboard.
-
----
 
 ## Tech Stack
 
